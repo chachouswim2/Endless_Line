@@ -3,26 +3,25 @@ import streamlit as st
 st.sidebar.title("Contact Us!")
 st.sidebar.info(
     """
-    augustin.de-la-brosse@hec.edu
-    cesar.bareau@hec.edu 
-    camille.keisser@hec.edu
-    simon.mack@hec.edu
+    ines.benito@hec.edu
+    lea.chader@hec.edu 
+    remi.khellaf@hec.edu
+    mohamed-salah.mahmoudi@hec.edu
     charlotte.simon@hec.edu
-    julia.tournant@hec.edu
     """
 )
 
 
 st.markdown(
     """
-    # 💻 Welcome to your newest tool to Optimize the IT Infrastructure Consumption
+    # 🎡 Welcome to E's newest tool to keep track of your park activities, performance, maintenance, and waiting times. 
 
-    Navigate through the **sidebar tabs** to explore how your servers currently work, how ressources are distributed, and find out how you can optimize their configuration while reducing your cost and your impact on the environment.
+    Navigate through the **sidebar tabs** to explore how PortAventura World is currently performing and how its activities can be optimized.
     
-    ## Want to know more about our features?
-    - [Data Exploration](Data_Exploration) to analyze every aspects of Natixis' servers and understand how ressources are being used.
-    - [Optimization](Optimization) to optimize servers configuration.
-    - [Max Consumption Prediction](Max_Consumption_Prediction) to predict how much a server will consume in the future so you can assign ressources ahead of time.
-    - [Cost and Power Consumption](Cost_and_Power_Consumption) to find out how you can minimize your cost and reduce your impact on the environment!
+    ## Want to know more about your features?
+    - [Customer Performance](Customer_Performance) to explore how E's activities are impacting customers.
+    - [Operation Performance](Operation_Performance) to explore how E's operational activities.
+    - [Forecasting](Forecasting) to forecast attractions waiting times
+    - [Leverage Information](Leverage_Information) to read about identified use cases to leverage the forecasting findings and improve E's KPIS.
     """
 )
