@@ -29,10 +29,9 @@ def load_data(path):
     return df
 
 df = load_data("../data/data_merged.csv")
-df['WORK_DATE'] = pd.to_datetime(df['WORK_DATE'])
-df['year'] = df['WORK_DATE'].dt.year
-df['month'] = df['WORK_DATE'].dt.month
-df['day'] = df['WORK_DATE'].dt.day
+
+#Preprocess
+df = get_data_ready(df)
 
 
 ######################### WEATHER ON ATTENDANCE AND WAIT TIME #################################

@@ -71,13 +71,8 @@ elif filtered_df_TG is not None:
 
 ######################### DELTA #################################
 df = load_data("../data/data_merged.csv")
-df['WORK_DATE'] = pd.to_datetime(df['WORK_DATE'])
-df['year'] = df['WORK_DATE'].dt.year
-df['month'] = df['WORK_DATE'].dt.month
-df['day'] = df['WORK_DATE'].dt.day 
-df['DEB_TIME'] = pd.to_datetime(df['DEB_TIME'])
-df['hour'] = df['DEB_TIME'].dt.hour
-
+#Preprocess
+df = get_data_ready(df)
 
 # Dropdown
 attraction_names = df['ENTITY_DESCRIPTION_SHORT'].unique()
