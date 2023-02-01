@@ -21,7 +21,8 @@ st.markdown(
     ## Want to know more about your features?
     - [Customer Performance](Customer_Performance) to explore how E's activities are impacting customers.
     - [Operation Performance](Operation_Performance) to explore how E's operational activities.
-    - [Forecasting](Forecasting) to forecast attractions waiting times
-    - [Leverage Information](Leverage_Information) to read about identified use cases to leverage the forecasting findings and improve E's KPIS.
+    - [Weather Impact](Weather_Impact) to find out how the weather is impacting E's activities, from waiting times to closure.
+    - [Forecasting](Forecasting) to forecast attractions waiting times.
+    - [Clients](Clients) a page dedicated to E's visitor to better plan their visit to E.
     """
 )
