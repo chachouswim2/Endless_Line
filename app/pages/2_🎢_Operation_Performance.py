@@ -60,14 +60,16 @@ days = df['day'].unique()
 days = ["Select All"] + list(days)
 selected_day = st.selectbox('Select day:', days)
 
-col1, col2 = st.columns([2, 2])
-col1.subheader(":scales: :green[Average Capacity]")
-col2.subheader(':gear: :green[Adjusted Capacity]')
+col1, col2, col3 = st.columns([1, 1.3, 1.3])
+col1.subheader(":scales: :green[Capacity Utilisation]")
+col2.subheader(':gear: :green[Adjusted Capacity Utilisation]')
+col3.subheader(':100: :green[Capacity vs. Adjusted Capacity]')
 
 avg_wait_time = calculate_metrics(df, selected_year, selected_month, selected_day)[0]
 capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[1]
 avg_adjust_capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[2]
 sum_attendance = calculate_metrics(df, selected_year, selected_month, selected_day)[3]
+per_cap_adj = calculate_metrics(df, selected_year, selected_month, selected_day)[4]
 
 delta = None
 delta1 = None
@@ -78,8 +80,9 @@ delta = calculate_delta(df, selected_year, selected_month, selected_day, avg_wai
 delta1 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[1]
 delta2 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[2]
 
-col1.metric("Capacity Utilization" , '{:,.0f}%'.format(capacity_utilization), delta=delta1)
-col2.metric("Adjusted Capacity Utilization" , '{:,.0f}%'.format(capacity_utilization), delta=delta2)
+col1.metric("Nb of Guest Carried / Capacity" , '{:,.0f}%'.format(capacity_utilization), delta=delta1)
+col2.metric("Nb of Guest Carried / Adjusted Capacity" , '{:,.0f}%'.format(avg_adjust_capacity_utilization), delta=delta2)
+col3.metric("" , '{:,.0f}%'.format(per_cap_adj))
 
 #################################### Capacity #######################################
 
@@ -105,7 +108,21 @@ elif selected_year != "Select All" and selected_month != "Select All" and select
                     (df['month'] == selected_month) &
                     (df['day'] == selected_day)]
 
-if selected_attraction == "Select All":
+average_capacity = filtered_df['CAPACITY'].mean()
+average_adjust_capacity = filtered_df['ADJUST_CAPACITY'].mean()
+average_capacity_diff = average_capacity - average_adjust_capacity
+guest = filtered_df['GUEST_CARRIED'].mean()
+full = guest / average_adjust_capacity*100
+capacity_available =  average_adjust_capacity/average_capacity*100
+
+col1, col2, col3, col4 = st.columns([1,2, 2, 1])
+col2.subheader(":scales: :green[Percentage of Full]")
+col3.subheader(':gear: :green[Capacity Available]')
+
+col2.metric("" , '{:,.0f}%'.format(full))
+col3.metric("" , '{:,.0f}%'.format(capacity_available))
+
+if selected_attraction != "Select All":
     average_capacity = filtered_df['CAPACITY'].mean()
     average_adjust_capacity = filtered_df['ADJUST_CAPACITY'].mean()
     average_capacity_diff = average_capacity - average_adjust_capacity
@@ -122,5 +139,6 @@ if selected_attraction == "Select All":
 else:
     # Display the data in a table for the selected attraction
     st.write("Data for the selected attraction:", selected_attraction)
+    #filter groupby date and average values
     st.write(filtered_df[['WORK_DATE', 'ENTITY_DESCRIPTION_SHORT', 'CAPACITY', 'ADJUST_CAPACITY', 'NB_UNITS', 'NB_MAX_UNIT']])
 
