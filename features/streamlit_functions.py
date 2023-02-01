@@ -1,19 +1,57 @@
-def format_number(number: int) -> str:
+import pandas as pd
+import numpy as np
+
+def get_data_ready(df):
+    """Perform preprocessing on a dataframe and return and cleaned dataframe.
+    Args:
+    df (pandas.DataFrame): Input DataFrame
+
+    Returns:
+    df (pandas.DataFrame): Cleaned DataFrame
     """
-    Formats a number as a string with the appropriate unit suffix.
+    df['WORK_DATE'] = pd.to_datetime(df['WORK_DATE'])
+    df['year'] = df['WORK_DATE'].dt.year
+    df['month'] = df['WORK_DATE'].dt.month
+    df['day'] = df['WORK_DATE'].dt.day
 
-    :param number: The number to format.
-    :return: The formatted number string with the appropriate unit suffix.
+    df['DEB_TIME'] = pd.to_datetime(df['DEB_TIME'])
+    df['hour'] = df['DEB_TIME'].dt.hour
+    df['minute'] = df['DEB_TIME'].dt.minute
+    df['second'] = df['DEB_TIME'].dt.second 
 
-    """
-    if number >= 1000000000:
-        formatted_number = '{:,.0f}B'.format(number / 1000000000)
-    elif number >= 1000000:
-        formatted_number = '{:,.0f}M'.format(number / 1000000)
-    else:
-        formatted_number = '{:,.0f}'.format(number)
+    #Clean CAPACITY and ADJUST CAPACITY
+    #Replace negative Guest carried
+    df["GUEST_CARRIED"] = np.where(df["GUEST_CARRIED"] < 0, 0, df["GUEST_CARRIED"])
 
-    return formatted_number
+    #Drop rows with unconsistent behavior
+    df = df[~((df['WORK_DATE'] == '2018-08-29') | 
+          (df['WORK_DATE'] == '2019-01-03') | 
+          (df['WORK_DATE'] == '2020-07-11') | 
+          (df['WORK_DATE'] == '2021-08-30') & 
+          (df['CAPACITY'] == 0) & 
+          (df['ADJUST_CAPACITY'] == 0))]
+
+    #If GUEST_CARRIED not null and CAPACITY = ADJUST_CAPACITY = 0, set their
+    #values to GUEST_CARRIED
+    df.loc[(df['WORK_DATE'] == '2019-10-01') & 
+        (df['CAPACITY'] == 0) & 
+        (df['ADJUST_CAPACITY'] == 0), 
+        ['CAPACITY', 'ADJUST_CAPACITY']] = df['GUEST_CARRIED']
+
+    #If GUEST_CARRIED not null and ADJUST_CAPACITY = 0, set its value to
+    # CAPACITY
+    df.loc[(df['GUEST_CARRIED'] != 0) & 
+       (df['ADJUST_CAPACITY'] == 0) & 
+       (df['CAPACITY'] != 0), 
+       'ADJUST_CAPACITY'] = df['CAPACITY']
+
+    # If GUEST_CARRIED not null and CAPACITY = 0, set CAPACITY 
+    # to the biggest value between GUEST_CARRIED and ADJUST_CAPACITY
+    df.loc[(df['GUEST_CARRIED'] != 0) & 
+       (df['CAPACITY'] == 0), 
+       'CAPACITY'] = df[['CAPACITY', 'GUEST_CARRIED']].max(axis=1)
+
+    return df
 
 
 def calculate_metrics(df, selected_year, selected_month, selected_day):
