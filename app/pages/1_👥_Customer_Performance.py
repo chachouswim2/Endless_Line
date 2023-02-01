@@ -46,14 +46,27 @@ if filtered_df_PAW is not None and filtered_df_TG is not None:
     # Plot both on the same graph
     grouped = merged_df.groupby('USAGE_DATE')['attendance_x', 'attendance_y'].mean()
     st.line_chart(grouped)
+
 elif filtered_df_PAW is not None:
     # Plot only PAW
-    grouped_PAW = filtered_df_PAW.groupby('USAGE_DATE')['attendance'].mean()
-    st.line_chart(grouped_PAW)
+    grouped_PAW = filtered_df_PAW.groupby('USAGE_DATE')['attendance'].mean().reset_index()
+    #st.line_chart(grouped_PAW)
+    chart = alt.Chart(grouped_PAW).mark_line(color="#5DB44C").encode(
+        x= alt.X('USAGE_DATE', title="Date"),
+        y=alt.Y('attendance', title='Attendance'),
+    ).properties(
+        title='Total attendance over time', width=1250)
+    st.write(chart)
 elif filtered_df_TG is not None:
     # Plot only TG
-    grouped_TG = filtered_df_TG.groupby('USAGE_DATE')['attendance'].mean()
-    st.line_chart(grouped_TG)
+    grouped_TG = filtered_df_TG.groupby('USAGE_DATE')['attendance'].mean().reset_index()
+    #st.line_chart(grouped_TG)
+    chart = alt.Chart(grouped_TG).mark_line(color="#A34CB4").encode(
+        x= alt.X('USAGE_DATE', title="Date"),
+        y=alt.Y('attendance', title='Attendance'),
+    ).properties(
+        title='Total attendance over time', width=1250)
+    st.write(chart)
 
 
 ######################### DELTA #################################
@@ -138,7 +151,14 @@ elif selected_year != "Select All" and selected_month != "Select All" and select
                     (df['month'] == selected_month) &
                     (df['day'] == selected_day)]
 
-st.line_chart(filtered_df.groupby("WORK_DATE")["WAIT_TIME_MAX"].mean())
+#st.line_chart(filtered_df.groupby("WORK_DATE")["WAIT_TIME_MAX"].mean())
+time_df = filtered_df.groupby("WORK_DATE")["WAIT_TIME_MAX"].mean().reset_index()
+chart = alt.Chart(time_df).mark_line(color="#5DB44C").encode(
+        x= alt.X('WORK_DATE', title="Date"),
+        y=alt.Y('WAIT_TIME_MAX', title='Wait Time'),
+    ).properties(
+        title='Average Wait Time over time', width=1250)
+st.write(chart)
 
 col1, col2, col3, col4 = st.columns([1,1,1,1])
 col1.subheader(":rocket: :green[Minimum Waiting Times] _(in minutes)_")
