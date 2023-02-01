@@ -60,10 +60,11 @@ days = df['day'].unique()
 days = ["Select All"] + list(days)
 selected_day = st.selectbox('Select day:', days)
 
-col1, col2, col3 = st.columns([1, 1.3, 1.3])
+col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 col1.subheader(":scales: :green[Capacity Utilisation]")
 col2.subheader(':gear: :green[Adjusted Capacity Utilisation]')
 col3.subheader(':100: :green[Capacity vs. Adjusted Capacity]')
+col4.subheader(':large_green_circle: :green[Capacity Available]')
 
 avg_wait_time = calculate_metrics(df, selected_year, selected_month, selected_day)[0]
 capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[1]
@@ -112,33 +113,32 @@ average_capacity = filtered_df['CAPACITY'].mean()
 average_adjust_capacity = filtered_df['ADJUST_CAPACITY'].mean()
 average_capacity_diff = average_capacity - average_adjust_capacity
 guest = filtered_df['GUEST_CARRIED'].mean()
-full = guest / average_adjust_capacity*100
 capacity_available =  average_adjust_capacity/average_capacity*100
 
-col1, col2, col3, col4 = st.columns([1,2, 2, 1])
-col2.subheader(":scales: :green[Percentage of Full]")
-col3.subheader(':gear: :green[Capacity Available]')
+col4.metric("Avg Capacity / Avg Ajusted Capacity" , '{:,.0f}%'.format(capacity_available))
 
-col2.metric("" , '{:,.0f}%'.format(full))
-col3.metric("" , '{:,.0f}%'.format(capacity_available))
+st.markdown("##")
+
 
 if selected_attraction != "Select All":
-    average_capacity = filtered_df['CAPACITY'].mean()
-    average_adjust_capacity = filtered_df['ADJUST_CAPACITY'].mean()
-    average_capacity_diff = average_capacity - average_adjust_capacity
-    guest = filtered_df['GUEST_CARRIED'].mean()
-    full = guest / average_adjust_capacity
-    capacity_available =  average_adjust_capacity/average_capacity
-    # Display the average values
-    st.write("Average Capacity:", average_capacity)
-    st.write("Average Adjusted Capacity:", average_adjust_capacity)
-    st.write("Average Capacity Difference:", average_capacity_diff)
-    st.write("Average Number of Guest Carried:", guest)
-    st.write("Average Full:", full)
-    st.write("Capacity Available:", capacity_available)
-else:
+    st.write(f"Dive into the data for: :green[**{selected_attraction}**]")
     # Display the data in a table for the selected attraction
-    st.write("Data for the selected attraction:", selected_attraction)
-    #filter groupby date and average values
-    st.write(filtered_df[['WORK_DATE', 'ENTITY_DESCRIPTION_SHORT', 'CAPACITY', 'ADJUST_CAPACITY', 'NB_UNITS', 'NB_MAX_UNIT']])
+    columns_to_select = ['WORK_DATE', 'CAPACITY', 'ADJUST_CAPACITY', 'NB_UNITS', 'NB_MAX_UNIT', 'GUEST_CARRIED','UP_TIME']
+    sub_df = filtered_df[columns_to_select]
+    sub_df['CAPACITY'] = sub_df['CAPACITY'].round(2)
+    sub_df['WORK_DATE'] = pd.to_datetime(sub_df['WORK_DATE'])
+    sub_df['WORK_DATE'] = sub_df['WORK_DATE'].dt.strftime('%Y-%m-%d')
+
+    grouped = sub_df.groupby('WORK_DATE').mean()
+    new_column_names = {'CAPACITY':'AVG Capacity', 'ADJUST_CAPACITY':'AVG Adjusted Capacity', 
+                    'NB_UNITS':'AVG NB Units', 'NB_MAX_UNIT':'AVG NB MAX Unit',
+                    'GUEST_CARRIED':'AVG Nb of Guest Carried', 'UP_TIME':'AVG Time Running (mns)' }
+    grouped.rename(columns=new_column_names, inplace=True)
+
+
+    n_rows = st.slider('Number of rows to display', min_value=1, max_value=len(grouped), value=5, step=1)
+    st.dataframe(grouped.head(n_rows).style.highlight_max(color='#D8FAD9', axis=0).highlight_min(color = '#FAD8F9', axis=0), use_container_width=True)
+
+    #st.table(grouped.head(n_rows))
+
 
