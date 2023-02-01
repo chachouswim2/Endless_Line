@@ -1,0 +1,36 @@
+{
+    "path_log":"params/logs.log",
+    "log_level":"DEBUG",
+    "paths":{
+        "input_folder": "data/",
+        "attendance": "attendance.csv",
+        "entity_schedule": "entity_schedule.csv",
+        "link_attraction": "link_attraction_park.csv",
+        "parade_night_show": "parade_night_show.xlsx",
+        "waiting_times": "waiting_times.csv",
+        "weather_data": "weather_data.csv",
+        "covid": "owid-covid-data.csv",
+        "output_folder": "output/",
+        "inference": "inference/",
+        "model": "model/",
+        "visualizations": "visualizations/"
+
+    },
+    "load_preprocess": {
+    "covid_start_time":"2020-03-13",
+    "park_name":"PortAventura World",
+    "col_to_drop": ["REF_CLOSING_DESCRIPTION","ENTITY_TYPE", "UPDATE_TIME", "NIGHT_SHOW", "PARADE_1", "PARADE_2", "dt_iso", "FIN_TIME", "TIME_HOUR", "DEB_TIME_HOUR", "WORK_DATE"]
+    },
+    "model":{
+        "gridsearch":false,
+        "train":true,
+        "categorical_cols":["ENTITY_DESCRIPTION_SHORT", "year", "weekend"],
+        "numerical_cols":["NB_UNITS", "GUEST_CARRIED", "CAPACITY", "ADJUST_CAPACITY", "OPEN_TIME", "UP_TIME", "DOWNTIME", "NB_MAX_UNIT", "attendance", "normalized_delta_p1", "normalized_delta_p2", "normalized_delta_ns", "timet", "delta_open_scaled"],
+        "passthrough_cols":["month_sin", "month_cos", "day_sin", "day_cos", "minute_sin", "minute_cos", "weekday_sin", "weekday_cos", "hour_sin", "hour_cos"],
+        "n_estimators":180,
+        "max_depth": 20,
+        "min_child_weight": 5,
+        "reg_lambda": 0.05,
+        "learning_rate": 0.1
+    }
+}
