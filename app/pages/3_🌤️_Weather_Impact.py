@@ -10,6 +10,7 @@ import numpy as np
 from PIL import Image
 
 import matplotlib.pyplot as plt
+import altair as alt
 
 import sys 
 sys.path.append('../')
@@ -34,32 +35,133 @@ df['month'] = df['WORK_DATE'].dt.month
 df['day'] = df['WORK_DATE'].dt.day
 
 
-########################################### KPIS ##########################################
+######################### WEATHER ON ATTENDANCE AND WAIT TIME #################################
 
-# Dropdown
-attraction_names = df['ENTITY_DESCRIPTION_SHORT'].unique()
-attraction_names = ["Select All"] + list(attraction_names)
-
-## create a dropdown menu for the user to select the server name
-selected_attraction = st.selectbox('Select attraction:', attraction_names)
-
-if selected_attraction == "Select All":
-    df = df
+#Weather
+weather = df['weather_description'].unique()
+weather = ['Select All'] + list(weather)
+selected_weather = st.selectbox('Select a weather:', weather)
+if selected_weather != "Select All":
+    filtered_df = df[df['weather_description'] == selected_weather]
 else:
-    df = df[df['ENTITY_DESCRIPTION_SHORT'] == selected_attraction]
+    filtered_df = df
 
+#Metric
+metric = list(['Attendance', 'Waiting Times'])
+selected_metric = st.selectbox("Select what metric that you'd like to explore:", metric)
 
-######################### DELTA #################################
-years = df['year'].unique()
-years =  ["Select All"] + list(years)
-selected_year = st.selectbox('Select year:', years)
+#Graph narrow down
+view = list(['All', 'Yearly', 'Monthly', 'Daily'])
+selected_view = st.selectbox("Select the scale to see the graph at:", view)
 
-months = df['month'].unique()
-months =  ["Select All"] + list(months)
-selected_month = st.selectbox('Select month:', months)
+# Filter the df based on the selected filters
+if selected_metric == "Attendance":
+    if selected_view == 'Monthly':
+        time_df = filtered_df.groupby("month")["attendance"].mean().reset_index()
+        time_df['Month'] = time_df['month'].map({
+            1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
+            7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'
+        })
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('month:O', title='Month'),
+            y=alt.Y('attendance:Q', title='Avg Attendance')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='month:O',
+            y='attendance:Q'
+        )
+        st.write(chart+line)
 
-days = df['day'].unique()
-days = ["Select All"] + list(days)
-selected_day = st.selectbox('Select day:', days)
+    elif selected_view == 'Daily':
+        time_df = filtered_df.groupby("day")["attendance"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('day:O', title='Day'),
+            y=alt.Y('attendance:Q', title='Avg Attendance')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='day:O',
+            y='attendance:Q'
+        )
+        st.write(chart+line)
 
-col1, col2, col3 = st.columns(3)
+    elif selected_view == 'Yearly':
+        time_df = filtered_df.groupby("year")["attendance"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('year:O', title='Year'),
+            y=alt.Y('attendance:Q', title='Avg Attendance')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='year:O',
+            y='attendance:Q'
+        )
+        st.write(chart+line)
+
+    else:
+        time_df = filtered_df.groupby("WORK_DATE")["attendance"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_line(color="#5DB44C").encode(
+            x= alt.X('WORK_DATE', title="Date"),
+            y=alt.Y('attendance', title='Attendance'),
+        ).properties(
+            title='Average Attendance over time', width=1250)
+        st.write(chart)
+elif selected_metric == "Waiting Times":
+    if selected_view == 'Monthly':
+        time_df = filtered_df.groupby("month")["WAIT_TIME_MAX"].mean().reset_index()
+        time_df['Month'] = time_df['month'].map({
+            1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
+            7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'
+        })
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('month:O', title='Month'),
+            y=alt.Y('WAIT_TIME_MAX:Q', title='Avg Waiting Time')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='month:O',
+            y='WAIT_TIME_MAX:Q'
+        )
+        st.write(chart+line)
+
+    elif selected_view == 'Daily':
+        time_df = filtered_df.groupby("day")["WAIT_TIME_MAX"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('day:O', title='Day'),
+            y=alt.Y('WAIT_TIME_MAX:Q', title='Avg Waiting Time')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='day:O',
+            y='WAIT_TIME_MAX:Q'
+        )
+        st.write(chart+line)
+
+    elif selected_view == 'Yearly':
+        time_df = filtered_df.groupby("year")["WAIT_TIME_MAX"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('year:O', title='Year'),
+            y=alt.Y('WAIT_TIME_MAX:Q', title='Avg Waiting Time')
+        ).properties(
+            width=1250
+        )
+        line = chart.mark_line(color='#5DB44C').encode(
+            x='year:O',
+            y='WAIT_TIME_MAX:Q'
+        )
+        st.write(chart+line)
+
+    else:
+        time_df = filtered_df.groupby("WORK_DATE")["WAIT_TIME_MAX"].mean().reset_index()
+        chart = alt.Chart(time_df).mark_line(color="#5DB44C").encode(
+            x= alt.X('WORK_DATE', title="Date"),
+            y=alt.Y('WAIT_TIME_MAX', title='Waiting Time'),
+        ).properties(
+            title='Average Waiting Time over time', width=1250)
+        st.write(chart)
