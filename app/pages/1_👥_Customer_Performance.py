@@ -86,17 +86,26 @@ if selected_attraction == "Select All":
 else:
     df = df[df['ENTITY_DESCRIPTION_SHORT'] == selected_attraction]
 
+col1, col2, col3 = st.columns(3)
+
+
 years = df['year'].unique()
 years =  ["Select All"] + list(years)
-selected_year = st.selectbox('Select year:', years)
+
+with col1:
+    selected_year = st.selectbox('Select year:', years)
 
 months = df['month'].unique()
 months =  ["Select All"] + list(months)
-selected_month = st.selectbox('Select month:', months)
+
+with col2:
+    selected_month = st.selectbox('Select month:', months)
 
 days = df['day'].unique()
 days = ["Select All"] + list(days)
-selected_day = st.selectbox('Select day:', days)
+
+with col3:
+    selected_day = st.selectbox('Select day:', days)
 
 col1, col2 = st.columns([2, 2])
 col1.subheader(":family: :green[Total number of visitors]")
