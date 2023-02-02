@@ -16,6 +16,9 @@ data/
 #Model
 *.pkl
 
+#File
+exploration_charlotte.ipynb
+
 # Distribution / packaging
 .Python
 build/

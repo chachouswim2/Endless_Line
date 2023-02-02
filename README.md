@@ -25,10 +25,10 @@ Folder containing the ,json configuration file for the model training.
 Folder containing the functions used for the streamlit plots and data building/cleaning.
 
 ### models
-Folder containing the saved models as .pkl
+Folder containing the saved models as .pkl.
 
 ### notebooks
-Folder containing the different notebooks of group members
+Folder containing the notebooks with templates.
 
 ### app
 Folder containing the file to create a web app that integrates the model and its predictions.
