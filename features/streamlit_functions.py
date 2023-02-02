@@ -69,17 +69,17 @@ def calculate_metrics(df, selected_year, selected_month, selected_day):
     
     #Metrics
     avg_wait_time = filtered_df['WAIT_TIME_MAX'].mean()
-    capacity_utilization = (filtered_df['GUEST_CARRIED'].sum() / filtered_df['CAPACITY'].sum()) * 100
+    guest_carried = filtered_df['GUEST_CARRIED'].mean() 
     avg_adjust_capacity_utilization = (filtered_df['GUEST_CARRIED'].sum() / filtered_df['ADJUST_CAPACITY'].sum()) * 100
     sum_attendance = filtered_df['attendance'].sum()
 
     not_equal = filtered_df[filtered_df['CAPACITY'] != filtered_df['ADJUST_CAPACITY']]
     per_cap_adj = not_equal.shape[0] / df.shape[0] * 100
 
-    return avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, per_cap_adj
+    return avg_wait_time, guest_carried, avg_adjust_capacity_utilization, sum_attendance, per_cap_adj
 
 
-def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3):
+def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest_carried, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3):
     if selected_year == "Select All" and selected_month == "Select All" and selected_day == "Select All":
         delta = None
         delta1 = None
@@ -95,7 +95,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_year_df['WAIT_TIME_MAX'].mean(),2)
-            delta1 = round(capacity_utilization - ((prev_year_df['GUEST_CARRIED'].sum() / prev_year_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_year_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_year_df['GUEST_CARRIED'].sum() / prev_year_df['ADJUST_CAPACITY'].sum()) * 100), 2)
             delta3 = round(sum_attendance - prev_year_df['attendance'].sum())
 
@@ -108,7 +108,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_month_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_month_df['GUEST_CARRIED'].sum() / prev_month_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_month_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_month_df['GUEST_CARRIED'].sum() / prev_month_df['ADJUST_CAPACITY'].sum())* 100), 2)
             delta3 = round(sum_attendance - prev_month_df['attendance'].sum())
 
@@ -122,7 +122,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_day_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_day_df['GUEST_CARRIED'].sum() / prev_day_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_day_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_day_df['GUEST_CARRIED'].sum() / prev_day_df['ADJUST_CAPACITY'].sum()) * 100))
             delta3 = round(sum_attendance - prev_day_df['attendance'].sum())
 
@@ -136,7 +136,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_month_year_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_month_year_df['GUEST_CARRIED'].sum() / prev_month_year_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_month_year_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_month_year_df['GUEST_CARRIED'].sum() / prev_month_year_df['ADJUST_CAPACITY'].sum()) * 100))
             delta3 = round(sum_attendance - prev_month_year_df['attendance'].sum())
 
@@ -150,7 +150,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_day_year_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_day_year_df['GUEST_CARRIED'].sum() / prev_day_year_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_day_year_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_day_year_df['GUEST_CARRIED'].sum() / prev_day_year_df['ADJUST_CAPACITY'].sum()) * 100))
             delta3 = round(sum_attendance - prev_day_year_df['attendance'].sum())
 
@@ -165,7 +165,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_day_month_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_day_month_df['GUEST_CARRIED'].sum() / prev_day_month_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_day_month_df['GUEST_CARRIED'].mean()),2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_day_month_df['GUEST_CARRIED'].sum() / prev_day_month_df['ADJUST_CAPACITY'].sum()) * 100))
             delta3 = round(sum_attendance - prev_day_month_df['attendance'].sum())
 
@@ -180,7 +180,7 @@ def calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_ti
             delta3 = None
         else:
             delta = round(avg_wait_time - prev_day_month_year_df['WAIT_TIME_MAX'].mean(), 2)
-            delta1 = round(capacity_utilization - ((prev_day_month_year_df['GUEST_CARRIED'].sum() / prev_day_month_year_df['CAPACITY'].sum()) * 100),2)
+            delta1 = round(guest_carried - (prev_day_month_year_df['GUEST_CARRIED'].mean()), 2)
             delta2 = round(avg_adjust_capacity_utilization - ((prev_day_month_year_df['GUEST_CARRIED'].sum() / prev_day_month_year_df['ADJUST_CAPACITY'].sum()) * 100))
             delta3 = round(sum_attendance - prev_day_month_year_df['attendance'].sum())
     else:

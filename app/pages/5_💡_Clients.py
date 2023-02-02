@@ -104,10 +104,8 @@ st.markdown("##")
 
 st.markdown("<h2 style='color:#5DB44C'> Use our Forecasting tool to find out what will be your Waiting Time on the day of your visit!</h2>", unsafe_allow_html=True)
 
-years = list(['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'])
-selected_years = st.selectbox('Select the year you plan to visit:', years)
-
-st.write(":clock1: Based on your selection, we believe that :green[**your waiting time should be, on average**], ...")
+if st.button('Predict'):
+    st.write(":clock1: Based on your selection, we believe that :green[**your waiting time should be, on average**], ...")
 
 
 ##################################################### COMING SOON ##########################################################
@@ -115,7 +113,7 @@ st.markdown("""---""")
 
 st.markdown("<h3 style='color:#5DB44C'> COMING SOON: We optimize your trip to E's so your waiting time is minimum</h3>", unsafe_allow_html=True)
 
-st.write("We know that you hate waiting in line to tto enjoy your favorite ride. And we do to! This is why, at E, we are commited to making your experience better by reducing the time you spend waiting in line.")
+st.write("We know that you hate waiting in line to enjoy your favorite ride. We know that you hate waiting in line to enjoy your favorite ride. And we do too! This is why, at E, we are committed to making your experience better by reducing the time you spend waiting in line.")
 st.write("Our team of engineers and data scientists is working on developping a model that will :green[**optimize your day-trip at E by suggesting an order of attraction that would reduce your waiting time**].")
 st.write("For that, nothing simpler. You'll be able to select a day, time range, and specific attractions that you'd like to experiment and we will give you the optimized attraction order.")
 st.write("Don't wait and discover below what our :green[**app**] will look like!")
