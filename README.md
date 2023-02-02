@@ -9,6 +9,7 @@ To properly get the data, one has to download it locally on his/her computer, un
 - parade_night_show.xlsx
 - waiting_times.csv
 - weather_data.csv
+
 In addition for the Web App utilisation, one should have two extra files:
 - input_processed_data.csv
 - data_merged.csv
