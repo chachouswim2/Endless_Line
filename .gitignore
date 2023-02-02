@@ -17,7 +17,7 @@ data/
 *.pkl
 
 #File
-exploration_charlotte.ipynb
+*.ipynb
 
 # Distribution / packaging
 .Python
