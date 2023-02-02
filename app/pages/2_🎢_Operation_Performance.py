@@ -61,13 +61,13 @@ days = ["Select All"] + list(days)
 selected_day = st.selectbox('Select day:', days)
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-col1.subheader(":scales: :green[Capacity Utilisation]")
+col1.subheader(":scales: :green[Guest Carried]")
 col2.subheader(':gear: :green[Adjusted Capacity Utilisation]')
 col3.subheader(':100: :green[Capacity vs. Adjusted Capacity]')
 col4.subheader(':large_green_circle: :green[Capacity Available]')
 
 avg_wait_time = calculate_metrics(df, selected_year, selected_month, selected_day)[0]
-capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[1]
+guest = calculate_metrics(df, selected_year, selected_month, selected_day)[1]
 avg_adjust_capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[2]
 sum_attendance = calculate_metrics(df, selected_year, selected_month, selected_day)[3]
 per_cap_adj = calculate_metrics(df, selected_year, selected_month, selected_day)[4]
@@ -77,11 +77,11 @@ delta1 = None
 delta2 = None
 delta3 = None 
 
-delta = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[0]
-delta1 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[1]
-delta2 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, capacity_utilization, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[2]
+delta = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[0]
+delta1 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[1]
+delta2 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[2]
 
-col1.metric("Nb of Guest Carried / Capacity" , '{:,.0f}%'.format(capacity_utilization), delta=delta1)
+col1.metric("Avg Nb of Guest Carried" , '{:,.0f}'.format(guest), delta=delta1)
 col2.metric("Nb of Guest Carried / Adjusted Capacity" , '{:,.0f}%'.format(avg_adjust_capacity_utilization), delta=delta2)
 col3.metric("" , '{:,.0f}%'.format(per_cap_adj))
 
