@@ -13,15 +13,11 @@ The goal of this project is to accurately forecast waiting times for attractions
 ​
 To ensure that all libraries are installed pip install the requirements file:
  
-```
-pip install -r requirements.txt
-```
+```pip install -r requirements.txt```
 ​
 To run the model go to the console and run following command: 
  
-```
-python main.py
-```
+```python main.py```
 ​
 You should be at the source of the repository structure (ie. endlessline_eleven) when running the command.
 
