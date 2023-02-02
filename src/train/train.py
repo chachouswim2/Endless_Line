@@ -4,6 +4,8 @@ import logging
 import time
 import warnings
 import joblib
+import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.style as style
 import seaborn as sns
@@ -21,20 +23,21 @@ class Train():
         self.X_train = X_train
         self.y_train = y_train
     
-    def feature_importances(self, model, transformation):
+    def feature_importances(self, pipeline):
+        model = pipeline['model']
+        cols = pipeline[:-1].get_feature_names_out()
+        logger.info(f"")
+        feature_importance = model.feature_importances_
+        sorted_idx = np.argsort(feature_importance)[-10:]
         path_output = self.conf["paths"]["output_folder"]
         visulizations = self.conf["paths"]["visualizations"]
         style.use("bmh")
-
-        plt.figure(figsize=(8, 6))
-        cols = self.conf["model"]["col_to_drop"]
-        df_cols = self.X_train.drop(cols, axis=1)
-        df_cols = transformation.transform(df_cols)
-        plt.barh(df_cols.columns.to_list(), model.feature_importances_)
-        plt.legend(title="Feature importances", loc='center left',
-                bbox_to_anchor=(1, 0.5), fontsize="medium")
+        plt.figure(figsize=(20, 10))
+        plt.barh(range(len(sorted_idx)), feature_importance[sorted_idx], align='center')
+        plt.yticks(range(len(sorted_idx)), np.array(cols)[sorted_idx])
+        plt.title('Feature Importance')
         timestamp = time.strftime("%Y%m%d-%H%M%S")
-        plt.savefig(path_output + visulizations + "feature_importance" + timestamp + ".jpeg")
+        plt.savefig(path_output + visulizations + "feature_importance" + timestamp + ".png")
         plt.show()
         plt.clf()
         return None
@@ -55,7 +58,7 @@ class Train():
         logger.info(f'RMSE: {scores}')
         logger.info(f'RMSE (all folds): {-scores.mean():.3} ± {(-scores).std():.3}')
         pipeline.fit(self.X_train, self.y_train)
-        #self.feature_importances(pipeline['model'], pipeline["preprocessor"])
+        self.feature_importances(pipeline)
         return pipeline
     
     def save_model(self, pipeline):
@@ -73,6 +76,7 @@ class Train():
         model_folder = self.conf["paths"]["model"]
         full_path = path + model_folder + pipeline_name
         pipeline = joblib.load(full_path + '.pkl')
+        self.feature_importances(pipeline)
         return pipeline
     
     def visualize_gridsearch_results(self, cv_results):
@@ -95,7 +99,7 @@ class Train():
         plt.legend(title="Parameter learning_rate", loc='center left',
                 bbox_to_anchor=(1, 0.5), fontsize="medium")
         timestamp = time.strftime("%Y%m%d-%H%M%S")
-        plt.savefig(path_output + visulizations + "n_estimator_learning_rate" + timestamp + ".jpeg")
+        plt.savefig(path_output + visulizations + "n_estimator_learning_rate" + timestamp + ".png")
         plt.show()
         plt.clf()
 
@@ -108,7 +112,7 @@ class Train():
         plt.legend(title="Parameter learning_rate", loc='center left',
                 bbox_to_anchor=(1, 0.5), fontsize="medium")
         timestamp = time.strftime("%Y%m%d-%H%M%S")
-        plt.savefig(path_output + visulizations + "max_depth_learning_rate" + timestamp + ".jpeg")
+        plt.savefig(path_output + visulizations + "max_depth_learning_rate" + timestamp + ".png")
         plt.show()
         plt.clf()
         return None
@@ -141,7 +145,7 @@ class Train():
         logger.info(f"Standard deviation of CV score: {std_score: .6f}")
         self.visualize_gridsearch_results(grid.cv_results_)
         pipeline.fit(self.X_train, self.y_train)
-        self.feature_importances(pipeline['model'], pipeline["preprocessor"])
+        self.feature_importances(pipeline)
         return pipeline
     
     def evaluation_train(self, pipeline):

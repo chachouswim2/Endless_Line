@@ -43,7 +43,7 @@ class Model():
         learning_rate = self.conf["model"]["learning_rate"]
         model = XGBRegressor(n_estimators=n_estimators, max_depth=max_depth,
                             min_child_weight=min_child_weight, reg_lambda=reg_lambda,
-                            learning_rate=learning_rate, random_state=0)
+                            learning_rate=learning_rate, random_state=0, tree_method = "gpu_hist")
 
         my_pipeline = Pipeline(steps=[('preprocessor', preprocessor),
                               ('model', model)

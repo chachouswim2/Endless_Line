@@ -49,7 +49,7 @@ def main(logger, conf):
             "Time to find the best model with gridsearch and train it:" + str(time_2 - time_1)
         )
     else:
-        pipeline_fit = train_class.load_model("add_model_name")
+        pipeline_fit = train_class.load_model("pipeline20230202-092805")
         time_2 = time()
         logger.debug(
             "Time to load a saved model:" + str(time_2 - time_1)
