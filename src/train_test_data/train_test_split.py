@@ -1,6 +1,12 @@
 """Get the training and test data."""
 
+import math
+import logging
+import warnings
 from sklearn.model_selection import train_test_split
+
+warnings.filterwarnings("ignore")
+logger = logging.getLogger("main_logger")
 
 class TrainTest():
     """Create the model architecture."""
@@ -20,5 +26,16 @@ class TrainTest():
         X = self.data.drop(['WAIT_TIME_MAX', "DEB_TIME"], axis=1)
         y = self.data["WAIT_TIME_MAX"]
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y,train_size=0.8, test_size=0.2, random_state=0)
+            X, y,train_size=0.8, test_size=0.2, random_state=0, shuffle=False)
         return X_train, X_test, y_train, y_test
+    
+    def get_test_data_dates(self):
+        """Get the dates for the test set.
+        Args:
+            data: the full dataset.
+        Returns:
+            dates: the dates for the test set.
+        """
+        length = math.ceil(len(self.data)*0.2)
+        dates = self.data.tail(length)["DEB_TIME"]
+        return dates
