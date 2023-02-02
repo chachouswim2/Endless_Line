@@ -11,13 +11,13 @@ __pycache__/
 *.zip
 
 # Folder
-app/data
-app/images_app
-data/ipynb_checkpoints
 data/
 
 #Model
 *.pkl
+
+#File
+exploration_charlotte.ipynb
 
 # Distribution / packaging
 .Python
