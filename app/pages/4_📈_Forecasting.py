@@ -79,6 +79,10 @@ hour_selected = st.slider("Select hour range", 9, 22, (9, 22))
 
 predict = st.checkbox('Make Predictions')
 
+# Filter the df based on the hours
+if hour_selected != (9, 22):
+    filtered_df = filtered_df[(filtered_df['hour'] >= hour_selected[0]) & (filtered_df['hour'] <= hour_selected[1])]
+
 if predict:
     if selected_month != "Select All" and selected_day == "Select All":
         filtered_df = filtered_df[filtered_df['month'] == selected_month]
