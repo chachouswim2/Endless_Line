@@ -8,11 +8,13 @@ import pandas as pd
 from PIL import Image
 
 import matplotlib.pyplot as plt
+import altair as alt
 import calendar
 from datetime import date, timedelta
 import time
 import plotly
 import plotly.express as px
+import joblib
 
 import sys 
 sys.path.append('../')
@@ -23,19 +25,22 @@ from features.streamlit_functions import *
 st.set_page_config(layout="wide", page_title="Clients", page_icon=":flag:")
 st.markdown("<h1 style='color:#5DB44C'>Use our newest technology to plan your visit to E</h1>", unsafe_allow_html=True)
 
-# Load df
+# Load Data
 @st.cache(allow_output_mutation=True)
 def load_df(path):
     df = pd.read_csv(path)
     return df
 
-df = load_df("../data/data_merged.csv")
-df['WORK_DATE'] = pd.to_datetime(df['WORK_DATE'])
-df['year'] = df['WORK_DATE'].dt.year
-df['month'] = df['WORK_DATE'].dt.month
-df['day'] = df['WORK_DATE'].dt.day 
-df['DEB_TIME'] = pd.to_datetime(df['DEB_TIME'])
-df['hour'] = df['DEB_TIME'].dt.hour
+#Model data
+df = load_df("../data/input_processed_data.csv")
+
+## Load Model
+@st.cache(allow_output_mutation=True)
+def load_model(pkl_file_path):
+    reg = joblib.load(pkl_file_path)
+    return reg
+
+pipeline = load_model("../models/pipelineines.pkl")
 
 ## Filters
 # Dropdown
@@ -54,17 +59,22 @@ if "Select All" not in selected_attraction:
 else:
     filtered_df = df
 
+
+col1, col2 = st.columns(2)
+
 months = df['month'].unique()
 months =  ["Select All"] + list(months)
-selected_month = st.selectbox('Select month:', months)
+
+with col1:
+    selected_month = st.selectbox('Select month:', months)
+
 
 days = df['day'].unique()
 days = ["Select All"] + list(days)
-selected_day = st.selectbox('Select day:', days)
 
-weather = df['weather_description'].unique()
-weather = ['Select All'] + list(weather)
-selected_weather = st.selectbox('Select a weather:', weather)
+with col2:
+    selected_day = st.selectbox('Select day:', days)
+
 
 # Create the slider widget for 'hour'
 hour_selected = st.slider("Select hour range", 9, 22, (9, 22))
@@ -74,8 +84,6 @@ if selected_month != "Select All":
     filtered_df = df[df['month'] == selected_month]
 if selected_day != "Select All":
     filtered_df = filtered_df[filtered_df['day'] == selected_day]
-if selected_weather != "Select All":
-    filtered_df = filtered_df[filtered_df['weather_description']==  selected_weather]
 if hour_selected != (9, 22):
     filtered_df = filtered_df[(filtered_df['hour'] >= hour_selected[0]) & (filtered_df['hour'] <= hour_selected[1])]
 
@@ -105,8 +113,27 @@ st.markdown("##")
 st.markdown("<h2 style='color:#5DB44C'> Use our Forecasting tool to find out what will be your Waiting Time on the day of your visit!</h2>", unsafe_allow_html=True)
 
 if st.button('Predict'):
-    st.write(":clock1: Based on your selection, we believe that :green[**your waiting time should be, on average**], ...")
+    predictions = pipeline.predict(filtered_df.drop(['WAIT_TIME_MAX'], axis=1))
+    mean = np.mean(predictions)
+    st.write(":clock1: With the selected filters we forecast the :green[**overall average waiting time**] to be: :green[**{:.2f}**] minutes".format(mean))
 
+    df_preds = pd.DataFrame({'Attraction': filtered_df['ENTITY_DESCRIPTION_SHORT'], 'Average Waiting Time': predictions})
+    df_preds = df_preds.groupby(['Attraction']).mean()
+    st.dataframe(df_preds, use_container_width=True)
+
+    #Plot
+    df_preds2 = pd.DataFrame({'Attraction': filtered_df['ENTITY_DESCRIPTION_SHORT'], 'Hours': filtered_df['hour'], 'Average Waiting Time': predictions}).groupby('Hours').mean().reset_index()
+    chart = alt.Chart(df_preds2).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('Hours:O', title='Hour'),
+            y=alt.Y('Average Waiting Time:Q', title='Avg Wait Time')
+        ).properties(
+            width=1250
+        )
+    line = chart.mark_line(color='#5DB44C').encode(
+        x='Hours:O',
+        y='Average Waiting Time:Q'
+    )
+    st.write(chart+line)
 
 ##################################################### COMING SOON ##########################################################
 st.markdown("""---""")
