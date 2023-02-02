@@ -45,13 +45,20 @@ if selected_weather != "Select All":
 else:
     filtered_df = df
 
+col1, col2 = st.columns(2)
+
+
 #Metric
 metric = list(['Attendance', 'Waiting Times'])
-selected_metric = st.selectbox("Select what metric that you'd like to explore:", metric)
+
+with col1:
+    selected_metric = st.selectbox("Select what metric that you'd like to explore:", metric)
 
 #Graph narrow down
 view = list(['All', 'Yearly', 'Monthly', 'Daily'])
-selected_view = st.selectbox("Select the scale to see the graph at:", view)
+
+with col2:
+    selected_view = st.selectbox("Select the scale to see the graph at:", view)
 
 # Filter the df based on the selected filters
 if selected_metric == "Attendance":
@@ -164,3 +171,23 @@ elif selected_metric == "Waiting Times":
         ).properties(
             title='Average Waiting Time over time', width=1250)
         st.write(chart)
+
+
+st.markdown("<h3 style='color:#5DB44C'>Zoom in on the impact of the weather on the Waiting Times</h3>", unsafe_allow_html=True)
+
+time_grouped = pd.DataFrame({'Weather': filtered_df['weather_description'], 'Average Waiting Time': filtered_df['WAIT_TIME_MAX']})
+grouped_w2 = time_grouped.groupby('Weather').mean().reset_index()
+grouped_w2.sort_values(by="Average Waiting Time")
+
+chart = alt.Chart(grouped_w2).mark_bar(color="#D8FAD9").encode(
+            x=alt.X('Weather:O', title='Weather'),
+            y=alt.Y('Average Waiting Time:Q', title='Average Waiting Time')
+        ).properties(
+            height = 500,
+            width=1250
+        )
+line = chart.mark_line(color='#5DB44C').encode(
+    x='Weather:O',
+    y='Average Waiting Time:Q'
+)
+(chart+line)
