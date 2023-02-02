@@ -12,7 +12,6 @@ import seaborn as sns
 from sklearn.model_selection import TimeSeriesSplit, cross_validate
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_absolute_percentage_error
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("main_logger")
@@ -163,7 +162,5 @@ class Train():
         """
         y_predict = pipeline.predict(self.X_train)
         mae = mean_absolute_error(self.y_train, y_predict)
-        mape = mean_absolute_percentage_error(self.y_train, y_predict)
         logger.info(f"The MAE on the training set is: {mae:.2f}")
-        logger.info(f"The MAPE on the training set is: {mape:.2f}")
-        return mae, mape
+        return mae

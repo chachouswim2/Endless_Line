@@ -55,7 +55,7 @@ def main(logger, conf):
         logger.debug(
             "Time to load a saved model:" + str(time_2 - time_1)
         )
-    mae, mape = train_class.evaluation_train(pipeline_fit)
+    mae = train_class.evaluation_train(pipeline_fit)
     inference_class = Inference(conf, pipeline_fit, X_test, y_test, split_class)
     y_pred, rmse, mae = inference_class.make_predictions()
     time_3 = time()
