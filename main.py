@@ -32,8 +32,8 @@ def main(logger, conf):
     split_class = TrainTest(conf, df)
     X_train, X_test, y_train, y_test = split_class.train_test_split()
     train_class = Train(conf, X_train, y_train)
+    model_class = Model(conf)
     if conf["model"]["train"]:
-        model_class = Model(conf)
         pipeline = model_class.define_model_pipeline()
         pipeline_fit = train_class.train_model(pipeline)
         train_class.save_model(pipeline_fit)
@@ -42,7 +42,8 @@ def main(logger, conf):
             "Time to train a model:" + str(time_2 - time_1)
         )
     elif conf["model"]["gridsearch"]:
-        pipeline_fit = train_class.train_model(pipeline)
+        pipeline = model_class.define_model_pipeline()
+        pipeline_fit = train_class.find_best_params(pipeline)
         train_class.save_model(pipeline_fit)
         time_2 = time()
         logger.debug(
@@ -54,7 +55,7 @@ def main(logger, conf):
         logger.debug(
             "Time to load a saved model:" + str(time_2 - time_1)
         )
-    train_class.evaluation_train(pipeline_fit)
+    mae, mape = train_class.evaluation_train(pipeline_fit)
     inference_class = Inference(conf, pipeline_fit, X_test, y_test, split_class)
     y_pred, rmse, mae = inference_class.make_predictions()
     time_3 = time()

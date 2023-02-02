@@ -6,6 +6,7 @@ import warnings
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_percentage_error
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("main_logger")
@@ -29,8 +30,10 @@ class Inference():
         """
         rmse = mean_squared_error(self.y_test, y_pred, squared=False)
         mae = mean_absolute_error(self.y_test, y_pred)
+        mape = mean_absolute_percentage_error(self.y_test, y_pred)
         logger.info(f"The RMSE on test set is: {rmse:.2f}")
         logger.info(f"The MAE on test set is: {mae:.2f}")
+        logger.info(f"The MAPE on test set is: {mape:.2f}")
         return rmse, mae
     
     def save_preds(self, y_pred):
