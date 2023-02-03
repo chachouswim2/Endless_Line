@@ -65,8 +65,8 @@ To properly get the data, one has to download it locally on his/her computer, un
 - weather_data.csv
 
 In addition for the Web App utilisation, one should have two extra files:
-- input_processed_data.csv (the output dataframe of the load_merge and preprocess .py files saved as csv).
-- data_merged.csv
+- input_processed_data.csv: the output dataframe of the load_merge and preprocess .py files saved as csv used as input to the model to make predictions within the app.
+- data_merged.csv: the merged inputs dataframe used within the app dashboard for KPIs tracking.
 
 ### output
 The output folder contains three folders:
