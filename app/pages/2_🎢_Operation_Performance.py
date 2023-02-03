@@ -11,7 +11,9 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 
-from pages.features import streamlit_functions
+import sys
+sys.path.append('endlessline_eleven\\app\\pages\\utils')
+import streamlit_functions
 
 st.set_page_config(layout="wide", page_title="Operation Performance Analysis", page_icon=":compass:")
 
@@ -26,7 +28,7 @@ def load_data(path):
 
 df = load_data("../data/data_merged.csv")
 #Preprocess
-df = get_data_ready(df)
+df = streamlit_functions.get_data_ready(df)
 
 
 ########################################### KPIS ##########################################
@@ -63,20 +65,20 @@ col2.subheader(':gear: :green[Adjusted Capacity Utilisation]')
 col3.subheader(':100: :green[Capacity vs. Adjusted Capacity]')
 col4.subheader(':large_green_circle: :green[Capacity Available]')
 
-avg_wait_time = calculate_metrics(df, selected_year, selected_month, selected_day)[0]
-guest = calculate_metrics(df, selected_year, selected_month, selected_day)[1]
-avg_adjust_capacity_utilization = calculate_metrics(df, selected_year, selected_month, selected_day)[2]
-sum_attendance = calculate_metrics(df, selected_year, selected_month, selected_day)[3]
-per_cap_adj = calculate_metrics(df, selected_year, selected_month, selected_day)[4]
+avg_wait_time = streamlit_functions.calculate_metrics(df, selected_year, selected_month, selected_day)[0]
+guest = streamlit_functions.calculate_metrics(df, selected_year, selected_month, selected_day)[1]
+avg_adjust_capacity_utilization = streamlit_functions.calculate_metrics(df, selected_year, selected_month, selected_day)[2]
+sum_attendance = streamlit_functions.calculate_metrics(df, selected_year, selected_month, selected_day)[3]
+per_cap_adj = streamlit_functions.calculate_metrics(df, selected_year, selected_month, selected_day)[4]
 
 delta = None
 delta1 = None
 delta2 = None
 delta3 = None 
 
-delta = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[0]
-delta1 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[1]
-delta2 = calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[2]
+delta = streamlit_functions.calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[0]
+delta1 = streamlit_functions.calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[1]
+delta2 = streamlit_functions.calculate_delta(df, selected_year, selected_month, selected_day, avg_wait_time, guest, avg_adjust_capacity_utilization, sum_attendance, delta, delta1, delta2, delta3)[2]
 
 col1.metric("Avg Nb of Guest Carried" , '{:,.0f}'.format(guest), delta=delta1)
 col2.metric("Nb of Guest Carried / Adjusted Capacity" , '{:,.0f}%'.format(avg_adjust_capacity_utilization), delta=delta2)

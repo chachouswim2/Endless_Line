@@ -12,7 +12,9 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import altair as alt
 
-from pages.features import streamlit_functions
+import sys
+sys.path.append('endlessline_eleven\\app\\pages\\utils')
+import streamlit_functions
 
 st.set_page_config(layout="wide", page_title="Weather Impact", page_icon=":mostly_sunny:")
 
@@ -28,7 +30,7 @@ def load_data(path):
 df = load_data("../data/data_merged.csv")
 
 #Preprocess
-df = get_data_ready(df)
+df = streamlit_functions.get_data_ready(df)
 
 
 ######################### WEATHER ON ATTENDANCE AND WAIT TIME #################################

@@ -17,9 +17,8 @@ import plotly.express as px
 import joblib
 
 import sys
-sys.path.append('./')
-from pages.features import streamlit_functions
-
+sys.path.append('endlessline_eleven\\app\\pages\\utils')
+import streamlit_functions
 
 st.set_page_config(layout="wide", page_title="Clients", page_icon=":flag:")
 st.markdown("<h1 style='color:#5DB44C'>Use our newest technology to plan your visit to E</h1>", unsafe_allow_html=True)

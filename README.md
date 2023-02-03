@@ -30,12 +30,11 @@ Our repository is structured in the following way:
    |--data
    |--app
    |-----pages
+   |--------features
    |-----home.py
    |-----requirements.txt
    |-----Pipfile
-   |--features
    |--models
-   |--notebooks
    |--params
    |--src
    |-----evaluation
@@ -71,9 +70,6 @@ The src folder contains all the different classes combined in the main.py file. 
 
 ### params
 Params folder includes the configuration file and a logs.log file that is added to view the log info and debug
-
-### features
-Folder containing the functions used for the streamlit plots and data building/cleaning.
 
 ### models
 Folder containing the saved models as .pkl.

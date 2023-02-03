@@ -12,8 +12,9 @@ import matplotlib.pyplot as plt
 import altair as alt
 import joblib
 
-from pages.features import streamlit_functions
-
+import sys
+sys.path.append('endlessline_eleven\\app\\pages\\utils')
+import streamlit_functions
 
 
 st.set_page_config(layout="wide", page_title="Forecasting", page_icon=":trend:")
