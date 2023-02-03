@@ -37,7 +37,7 @@ Our repository is structured in the following way:
    |-----home.py
    |-----requirements.txt
    |-----Pipfile
-   |--models
+   |--output
    |--params
    |--src
    |-----evaluation
