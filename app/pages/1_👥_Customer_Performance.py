@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import altair as alt
 
 import sys
-sys.path.append('endlessline_eleven\\app\\pages\\utils')
+sys.path.append('../app/pages/utils')
 import streamlit_functions
 
 
