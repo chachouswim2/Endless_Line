@@ -16,10 +16,9 @@ import plotly
 import plotly.express as px
 import joblib
 
-import sys 
-sys.path.append('../')
-from features.build_data import * 
-from features.streamlit_functions import *
+import sys
+sys.path.append('./')
+from pages.features import streamlit_functions
 
 
 st.set_page_config(layout="wide", page_title="Clients", page_icon=":flag:")

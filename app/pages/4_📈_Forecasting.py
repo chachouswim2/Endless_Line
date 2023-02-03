@@ -12,11 +12,7 @@ import matplotlib.pyplot as plt
 import altair as alt
 import joblib
 
-import sys
-sys.path.append('../')
-from features.streamlit_functions import *
-#from features.load_merge import *
-#from features.preprocess import *
+from pages.features import streamlit_functions
 
 
 
