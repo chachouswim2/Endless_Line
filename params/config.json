@@ -23,15 +23,15 @@
     },
     "model":{
         "gridsearch":false,
-        "train":false,
+        "train":true,
         "categorical_cols":["ENTITY_DESCRIPTION_SHORT", "year", "weekend"],
-        "numerical_cols":["NB_UNITS", "GUEST_CARRIED", "CAPACITY", "ADJUST_CAPACITY", "OPEN_TIME", "UP_TIME", "DOWNTIME", "NB_MAX_UNIT", "attendance", "normalized_delta_p1", "normalized_delta_p2", "normalized_delta_ns", "timet", "delta_open_scaled"],
-        "passthrough_cols":["weather_description","month_sin", "month_cos", "day_sin", "day_cos", "minute_sin", "minute_cos", "weekday_sin", "weekday_cos", "hour_sin", "hour_cos"],
+        "numerical_cols":["NB_UNITS", "GUEST_CARRIED", "CAPACITY", "ADJUST_CAPACITY", "OPEN_TIME", "UP_TIME", "DOWNTIME", "NB_MAX_UNIT", "attendance", "normalized_delta_p1", "normalized_delta_p2", "normalized_delta_ns", "delta_open_scaled"],
+        "passthrough_cols":["weather_description","month_sin", "month_cos", "day_sin", "day_cos", "minute_sin", "minute_cos", "weekday_sin", "weekday_cos", "hour_sin", "hour_cos", "timet"],
         "col_to_drop":["delta_open_normalized", "delta_p1", "delta_p2", "delta_ns", "month", "day", "minute", "weekday", "hour"],
-        "n_estimators":180,
-        "max_depth": 20,
-        "min_child_weight": 5,
-        "reg_lambda": 0.05,
-        "learning_rate": 0.1
+        "n_estimators":500,
+        "max_depth": 7,
+        "min_child_weight": 6,
+        "reg_lambda": 0.1,
+        "learning_rate": 0.05
     }
 }
